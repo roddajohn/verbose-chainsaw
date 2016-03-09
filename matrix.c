@@ -61,10 +61,13 @@ Reallocates the memory for m->m such that it now has
 newcols number of collumns
 ====================*/
 void grow_matrix(struct matrix *m, int newcols) {
-  
+  printf("HI\n");
   int i;
+  printf("HI\n");
+  printf("rows: %d\n", m->rows);
   for (i=0;i<m->rows;i++) {
-      m->m[i] = realloc(m->m[i],newcols*sizeof(double));
+    printf("%d\n", i);
+    m->m[i] = realloc(m->m[i],newcols*sizeof(double));
   }
   m->cols = newcols;
 }

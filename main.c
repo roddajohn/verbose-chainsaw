@@ -10,32 +10,30 @@
 int main() {
 
   screen s;
+  color c;
+  c.red = MAX_COLOR;
+  c.green = 0;
+  c.blue = 0;
+
+  clear_screen(s);
+  
   struct matrix *edges;
   struct matrix *transform;
 
   edges = new_matrix(4, 4);
+
+  add_edge(edges, 100, 100, 0, 300, 100, 0);
+  add_edge(edges, 300, 100, 0, 300, 300, 0);
+  add_edge(edges, 300, 300, 0, 100, 300, 0);
+  add_edge(edges, 100, 300, 0, 100, 100, 0);
+
+  draw_lines(edges, s, c);
+
+  //  edges = new_matrix(4, 4);
   transform = new_matrix(4, 4);
-
-  edges->m[0][0] = 4;
-  edges->m[0][1] = 4;
-  edges->m[0][3] = 1;
-
-  edges->m[1][0] = 8;
-  edges->m[1][1] = 4;
-  edges->m[1][3] = 1;
-
-  edges->m[2][0] = 8;
-  edges->m[2][1] = 0;
-  edges->m[2][3] = 1;
-
-  edges->m[3][0] = 4;
-  edges->m[3][1] = 0;
-  edges->m[3][3] = 1;
 
   //transform = make_translate(4, 4, 0);
   transform = make_rotZ(90);
-
-
 
   print_matrix(transform);
   printf("\n\n");
