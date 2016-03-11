@@ -64,6 +64,10 @@ void grow_matrix(struct matrix *m, int newcols) {
   int i;
   for (i=0;i<m->rows;i++) {
     m->m[i] = realloc(m->m[i],newcols*sizeof(double));
+    int j;
+    for (j = m->cols; j < newcols; j++) {
+      m->m[i][j] = 0;
+    }
   }
   m->cols = newcols;
 }
@@ -135,32 +139,20 @@ Returns:
 a*b -> b
 */
 void matrix_mult(struct matrix *a, struct matrix *b) {
-  /*  int i = 0;
-  int j = 0;
-  struct matrix *newStuff = new_matrix(4, 4);
-  for (i = 0; i < b->rows; i++) {
-    for (j = 0; j < a->cols; j++) {
-      double sum = 0;
-      int k = 0;
-      for (k = 0; k < a->cols; k++) {
-	sum = sum + (a->m[k][i] * b->m[j][k]);
-      }
-      newStuff->m[j][i] = sum;
-    }
-  }
-  b->m = newStuff->m;*/
-    if(a->cols==b->rows){
+  if (a->cols == b->rows) {
     struct matrix *result = new_matrix(a->rows, b->cols);
-    int z, row, col;
-    for(row = 0;row < (result->rows); row++){
-      for(col = 0;col < (result->cols); col++){
-	for(z = 0;z < (a->cols); z++){
-	  result->m[row][col]+=(a->m[row][z])*(b->m[z][col]);
+
+    int z, i, j;
+
+    for(i = 0; i < (result->rows); i++){
+      for(j = 0; j < (result->cols); j++){
+	for(z = 0; z < (a->cols); z++){
+	  result->m[i][j] += (a->m[i][z]) * (b->m[z][j]);
 	}
       }
     }
     copy_matrix(result,b);
-    }
+  }
 }
 
 
@@ -194,7 +186,7 @@ struct matrix * make_translate(double x, double y, double z) {
   ident(transform);
   transform->m[0][3] = x;
   transform->m[1][3] = y;
-  transform->m[3][3] = z;
+  transform->m[2][3] = z;
 
   return transform;
 }
