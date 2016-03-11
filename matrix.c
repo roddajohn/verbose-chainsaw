@@ -61,12 +61,8 @@ Reallocates the memory for m->m such that it now has
 newcols number of collumns
 ====================*/
 void grow_matrix(struct matrix *m, int newcols) {
-  printf("HI\n");
   int i;
-  printf("HI\n");
-  printf("rows: %d\n", m->rows);
   for (i=0;i<m->rows;i++) {
-    printf("%d\n", i);
     m->m[i] = realloc(m->m[i],newcols*sizeof(double));
   }
   m->cols = newcols;
@@ -85,7 +81,7 @@ void print_matrix(struct matrix *m) {
 
   for (i = 0; i < m->rows; i++) {
     for (j = 0; j < m->cols; j++) {
-      printf("%f ", m->m[j][i]);
+      printf("%f ", m->m[i][j]);
     }
     printf("\n");
   }
@@ -139,7 +135,7 @@ Returns:
 a*b -> b
 */
 void matrix_mult(struct matrix *a, struct matrix *b) {
-  int i = 0;
+  /*  int i = 0;
   int j = 0;
   struct matrix *newStuff = new_matrix(4, 4);
   for (i = 0; i < b->rows; i++) {
@@ -152,7 +148,19 @@ void matrix_mult(struct matrix *a, struct matrix *b) {
       newStuff->m[j][i] = sum;
     }
   }
-  b->m = newStuff->m;
+  b->m = newStuff->m;*/
+    if(a->cols==b->rows){
+    struct matrix *result = new_matrix(a->rows, b->cols);
+    int z, row, col;
+    for(row = 0;row < (result->rows); row++){
+      for(col = 0;col < (result->cols); col++){
+	for(z = 0;z < (a->cols); z++){
+	  result->m[row][col]+=(a->m[row][z])*(b->m[z][col]);
+	}
+      }
+    }
+    copy_matrix(result,b);
+    }
 }
 
 
@@ -184,9 +192,9 @@ struct matrix * make_translate(double x, double y, double z) {
   struct matrix *transform = new_matrix(4, 4);
 
   ident(transform);
-  transform->m[3][0] = x;
-  transform->m[3][1] = y;
-  transform->m[3][2] = z;
+  transform->m[0][3] = x;
+  transform->m[1][3] = y;
+  transform->m[3][3] = z;
 
   return transform;
 }
@@ -224,9 +232,9 @@ struct matrix * make_rotX(double theta) {
 
   ident(transform);
   transform->m[1][1] = cos(convertToRadians(theta));
-  transform->m[2][1] = -1 * sin(convertToRadians(theta));
+  transform->m[1][2] = -1 * sin(convertToRadians(theta));
   transform->m[2][2] = cos(convertToRadians(theta));
-  transform->m[1][2] = sin(convertToRadians(theta));
+  transform->m[2][1] = sin(convertToRadians(theta));
 
   return transform;
 }
@@ -243,7 +251,7 @@ struct matrix * make_rotY(double theta) {
   ident(transform);
   transform->m[0][0] = cos(convertToRadians(theta));
   transform->m[2][2] = cos(convertToRadians(theta));
-  transform->m[0][2] = sin(convertToRadians(theta));
+  transform->m[0][2] = -1 * sin(convertToRadians(theta));
   transform->m[2][0] = sin(convertToRadians(theta));
 
   return transform;
@@ -260,9 +268,9 @@ struct matrix * make_rotZ(double theta) {
 
   ident(transform);
   transform->m[0][0] = cos(convertToRadians(theta));
-  transform->m[1][0] = -1 * sin(convertToRadians(theta));
+  transform->m[0][1] = -1 * sin(convertToRadians(theta));
   transform->m[1][1] = cos(convertToRadians(theta));
-  transform->m[0][1] = sin(convertToRadians(theta));
+  transform->m[1][0] = sin(convertToRadians(theta));
 
   return transform;
 }

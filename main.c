@@ -29,20 +29,22 @@ int main() {
 
   draw_lines(edges, s, c);
 
-  //  edges = new_matrix(4, 4);
   transform = new_matrix(4, 4);
 
-  //transform = make_translate(4, 4, 0);
-  transform = make_rotZ(90);
+  int i = 0;
+  for (i = 0; i < 10; i++) {
+    transform = make_translate(10, 10, 0);
 
-  print_matrix(transform);
-  printf("\n\n");
-  print_matrix(edges);
+    matrix_mult(transform, edges);
 
-  printf("\n\n");
-  matrix_mult(transform, edges);
-  print_matrix(edges);
-  
+    draw_lines(edges, s, c);
+
+    print_matrix(edges);
+    printf("\n\n");
+  }
+
   free_matrix( transform );
   free_matrix( edges );
+
+  save_extension(s, "matrix.png");
 }  
