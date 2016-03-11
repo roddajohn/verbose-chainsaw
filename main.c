@@ -31,6 +31,8 @@ int main() {
 
   transform = new_matrix(4, 4);
 
+  struct matrix *new_transform;
+
   int offset = 50;
 
   for (offset = 50; offset <= 500; offset += 10) {
@@ -38,13 +40,10 @@ int main() {
     int i = 0;
     
     for (i = 0; i < 36; i++) {
-      struct matrix *new_transform;
       
       new_transform = make_rotZ(10);
       
       matrix_mult(new_transform, edges);
-      
-      free_matrix(new_transform);
       
       draw_lines(edges, s, c);  
     }
@@ -60,6 +59,7 @@ int main() {
 
   free_matrix( transform );
   free_matrix( edges );
+  free_matrix(new_transform);
 
   save_extension(s, "matrix.png");
 }  
